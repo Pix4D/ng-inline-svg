@@ -13,24 +13,14 @@ export class InlineSVGConfig {
 
 @Injectable()
 export class SVGCacheService {
-  private static _cache: Map<string, SVGElement>;
-  private static _inProgressReqs: Map<string, Observable<SVGElement>>;
+  private static _cache = new Map<string, SVGElement>();
+  private static _inProgressReqs = new Map<string, Observable<SVGElement>>();
 
-  private static _baseUrl: string;
+  private static _baseUrl: string = null;
 
-  constructor(
-    @Optional() config: InlineSVGConfig,
-    private _http: HttpClient) {
+  constructor(@Optional() config: InlineSVGConfig, private _http: HttpClient) {
     if (!SVGCacheService._baseUrl) {
       this.setBaseUrl(config);
-    }
-
-    if (!SVGCacheService._cache) {
-      SVGCacheService._cache = new Map<string, SVGElement>();
-    }
-
-    if (!SVGCacheService._inProgressReqs) {
-      SVGCacheService._inProgressReqs = new Map<string, Observable<SVGElement>>();
     }
   }
 
@@ -48,7 +38,8 @@ export class SVGCacheService {
     }
 
     // Otherwise, make the HTTP call to fetch
-    const req = this._http.get(absUrl, {responseType: 'text'})
+    const req = this._http
+      .get(absUrl, { responseType: 'text' })
       .catch((err: any) => err)
       .finally(() => {
         SVGCacheService._inProgressReqs.delete(absUrl);

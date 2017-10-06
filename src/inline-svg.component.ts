@@ -5,7 +5,7 @@ import {
   ElementRef,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 
 import { InlineSVGDirective } from './inline-svg.directive';
@@ -13,8 +13,8 @@ import { insertEl } from './utils';
 
 @Component({
   selector: 'inline-svg',
-  template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: '<ng-template></ng-template>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InlineSVGComponent implements AfterViewInit, OnChanges {
   @Input() context: InlineSVGDirective;
@@ -40,6 +40,12 @@ export class InlineSVGComponent implements AfterViewInit, OnChanges {
   }
 
   private _updateContent() {
-    insertEl(this.context, this._el.nativeElement, this.content, this.replaceContents, this.prepend);
+    insertEl(
+      this.context,
+      this._el.nativeElement,
+      this.content,
+      this.replaceContents,
+      this.prepend,
+    );
   }
 }
